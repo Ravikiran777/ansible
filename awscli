@@ -1,0 +1,37 @@
+#configur Aws_cli
+
+
+---
+- hosts: localhost
+  vars: 
+    sg: ansible-sg
+  tasks:
+   - name: create security group
+     ec2_group:
+      name: “{{ sg }}”
+      description: rules allowing traffic on port 22 and 80
+      region: us-west-2
+      rules:
+        - proto: tcp
+          from_port: 80
+          to_port: 80
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 22
+          to_port: 22
+          cidr_ip: 0.0.0.0/0
+      rules_egress:
+        - proto: all
+          cidr_ip: 0.0.0.0/0
+   - name: launch ec2 instance
+     ec2:
+      key_name: Demo
+      instance_type: t2.micro
+      image: ami-6e1a0117
+       region: us-west-2
+      group: “{{ sg }}”
+      Instance-tags:
+           Name: webserver
+      exact_count: 1
+      count_tag: Name
+
