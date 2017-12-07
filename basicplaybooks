@@ -1,0 +1,198 @@
+
+→ user creation different os flavors?
+
+When 
+With
+
+Take 2 instances → ubuntu,redhat
+
+---
+- hosts: localhost
+become: yes
+tasks:
+name: create users
+user: “{{items}}”
+with_items:
+ - a
+ - b
+ - c
+when: ansible_os_family=redhat
+- x
+- y
+- z
+
+
+
+Instance launching
+
+--- 
+- hosts : localhost
+   tasks :
+- name : Launching Instance
+- ec2 :
+   Instance type : t2.micro
+   image :
+   vpc-subnet id :
+   assign.public Ip :
+   region :
+   security group:
+   Monitoring : NO
+
+Auto-scaling
+
+- ec2-asg :
+   name :
+   Load balancers :
+   Avalibility Zone :
+   Launch configeraction-nac :
+   Min-Size :
+   Max-Size :
+   Desired Capacity :
+   vpc-zone-identifier :
+
+ElB-Launch
+
+- helth check
+Module : ec2-elb-id
+name :
+state : present
+zone :
+         -us-west-id
+Listener :
+-protocal : http
+ Local-balancer-port : 80
+instance-port : 80
+helth check :
+print-protocal : http
+ping-port : 80
+ping-path : /index.html
+responce-timeout : 5 # search
+intervel : 10 # seconds
+unhelth-threshold : 2
+helth-threshold : 1
+
+
+IAM-Polocies
+
+-name : Message
+  iam :
+  iam-tags : group
+  name : "{{item}}"
+  state :present
+  with-items :
+        - ravi
+        - teja
+        - ganesh
+  register : new-groups
+
+
+S3-Bucket Versining & Policies
+
+-S3-bucket
+ name : My S3 bucket
+ policy : "{{ }}"
+ versioning : yes
+ tags :
+ db : log tag;
+ exat : tag2
+
+
+
+---
+- hosts: localhost
+  tasks:
+  - name: launching instance
+    ec2:
+     key_name: key..
+     instance_type: t2.micro
+     image: ami-d732f0b7
+     region: us-west-2
+     count: 1
+     user_data: "{{ lookup('file', './apache2_install') }}"
+
+
+---
+- hosts: localhost
+  tasks:
+  - name: inastalling apache
+
+ec2.yml
+
+---
+- hosts: localhost
+  tasks:
+  roles:
+  - ec2-instance
+
+
+main.yml
+
+---
+- name: example ec2 group
+  ec2_group:
+    name: ec2sg
+    description: an example EC2 group
+    region: us-west-2
+    rules:
+     - proto: tcp
+       from_port: 80
+       to_port: 80
+       cidr_ip: 0.0.0.0/0
+     - proto: tcp
+       from_port: 22
+       to_port: 22
+       cidr_ip: 10.0.0.0/8
+     - proto: tcp
+       from_port: 443
+       to_port: 443
+    rules_egress:
+     - proto: tcp
+       from_port: 80
+       to_port: 80
+       cidr_ip: 0.0.0.0/0
+    apt:
+     name: apache2
+     state: present
+    sudo: yes
+
+
+
+
+
+
+-->  ec2.yml
+
+
+---
+- hosts: localhost
+  tasks:
+  roles:
+  - ec2-instance
+
+
+main.yml
+
+---
+- name: example ec2 group
+  ec2_group:
+    name: ec2sg
+    description: an example EC2 group
+    region: us-west-2
+    rules:
+     - proto: tcp
+       from_port: 80
+       to_port: 80
+       cidr_ip: 0.0.0.0/0
+     - proto: tcp
+       from_port: 22
+       to_port: 22
+       cidr_ip: 10.0.0.0/8
+     - proto: tcp
+       from_port: 443
+       to_port: 443
+    rules_egress:
+     - proto: tcp
+       from_port: 80
+       to_port: 80
+       cidr_ip: 0.0.0.0/0
+
